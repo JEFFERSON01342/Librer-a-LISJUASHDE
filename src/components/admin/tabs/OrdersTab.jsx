@@ -12,7 +12,8 @@ export default function OrdersTab({ onPendingChange }) {
       if (error) throw error;
       const mapped = (data || []).map((o) => ({
         id: o.id,
-        customer: o.customer,
+        customer: o.customer_name || o.customer || 'Cliente sin nombre',
+        customer_name: o.customer_name || o.customer || 'Cliente sin nombre',
         items: o.items_snapshot || [],
         total: parseFloat(o.total || 0),
         paymentMethod: o.payment_method || '—',

@@ -8,6 +8,7 @@ export default function OrderDetailModal() {
 
   const items = order.items || order.items_snapshot || [];
   const paymentMethod = order.paymentMethod || order.payment_method || '—';
+  const customerName = order.customer_name || order.customer || 'Cliente sin nombre';
 
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -19,7 +20,7 @@ export default function OrderDetailModal() {
         <div className="p-6 space-y-4">
           <div className="space-y-3">
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-xs">
-              <p><strong className="text-slate-700">Cliente:</strong> {order.customer}</p>
+              <p><strong className="text-slate-700">Cliente:</strong> {customerName}</p>
               <p><strong className="text-slate-700">Método de Pago:</strong> {paymentMethod}</p>
               <p><strong className="text-slate-700">Estado:</strong> {order.status}</p>
               <p><strong className="text-slate-700">Fecha:</strong> {order.created_at ? new Date(order.created_at).toLocaleString('es-GT') : '—'}</p>

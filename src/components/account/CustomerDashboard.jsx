@@ -11,7 +11,7 @@ export default function CustomerDashboard() {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .select('id,customer,payment_method,total,status,items_snapshot,created_at')
+        .select('id,customer_name,customer,payment_method,total,status,items_snapshot,created_at')
         .eq('user_id', currentProfile.id)
         .order('created_at', { ascending: false });
       if (error) throw error;
