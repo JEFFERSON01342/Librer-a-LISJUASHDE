@@ -28,7 +28,7 @@ export function useApp() {
 
 export function AppProvider({ children }) {
   // ===== Global state =====
-  const [products, setProducts] = useState(INITIAL_PRODUCTS);
+  const [products, setProducts] = useState(supabase ? [] : INITIAL_PRODUCTS);
   const [cart, setCart] = useState([]);
   const [currentCategory, setCurrentCategory] = useState('Todos');
   const [currentView, setCurrentView] = useState('store');
@@ -688,7 +688,10 @@ export function AppProvider({ children }) {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      if (!supabase) return;
+      if (!supabase) {
+        if (mounted) setProducts(INITIAL_PRODUCTS);
+        return;
+      }
       // Load categories then products (so category names resolve)
       let catList = [];
       try {

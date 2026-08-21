@@ -2,26 +2,44 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
 
 export default function HeroSlider({ scrollToProducts }) {
-  const { products, switchView } = useApp();
+  const { products, currentCategory, switchView } = useApp();
   const [index, setIndex] = useState(0);
   const timerRef = useRef(null);
 
+  const visibleProducts = products.filter((product) => {
+    if (currentCategory === 'Todos') return true;
+    return product.category === currentCategory;
+  });
+
   const startAuto = useCallback(() => {
     clearInterval(timerRef.current);
+    if (visibleProducts.length <= 1) return;
     timerRef.current = setInterval(() => {
       setIndex((i) => i + 1);
     }, 5000);
-  }, []);
+  }, [visibleProducts.length]);
 
   useEffect(() => {
     startAuto();
     return () => clearInterval(timerRef.current);
   }, [startAuto]);
 
-  const next = () => { setIndex((i) => i + 1); startAuto(); };
-  const prev = () => { setIndex((i) => (i - 1 + products.length) % products.length); startAuto(); };
+  useEffect(() => {
+    setIndex(0);
+  }, [currentCategory]);
 
-  const prod = products.length > 0 ? products[index % products.length] : null;
+  const next = () => {
+    if (visibleProducts.length === 0) return;
+    setIndex((i) => i + 1);
+    startAuto();
+  };
+  const prev = () => {
+    if (visibleProducts.length === 0) return;
+    setIndex((i) => (i - 1 + visibleProducts.length) % visibleProducts.length);
+    startAuto();
+  };
+
+  const prod = visibleProducts.length > 0 ? visibleProducts[index % visibleProducts.length] : null;
 
   return (
     <section className="w-full bg-gradient-to-br from-indigo-950 via-indigo-800 to-purple-900 text-white overflow-hidden shadow-2xl relative" style={{ minHeight: '340px' }}>
